@@ -93,5 +93,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/mata-pelajaran/{subject}', [AdminSubjectController::class, 'destroy'])->name('subjects.destroy');
     });
 });
-
+//auth routes
 require __DIR__.'/auth.php';
