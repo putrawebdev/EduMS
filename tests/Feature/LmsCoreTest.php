@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AppNotification;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\ClassMember;
@@ -213,6 +214,47 @@ class LmsCoreTest extends TestCase
             'id' => $submission->id,
             'score' => 95,
             'status' => 'graded',
+        ]);
+    }
+
+    public function test_user_can_mark_own_notification_as_read(): void
+    {
+        $notification = AppNotification::create([
+            'user_id' => $this->student->id,
+            'type' => 'assignment',
+            'title' => 'Tugas baru',
+            'message' => 'Ada tugas baru.',
+            'is_read' => false,
+        ]);
+
+        $response = $this->actingAs($this->student)->post(
+            route('notifications.mark-as-read', $notification->id)
+        );
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('app_notifications', [
+            'id' => $notification->id,
+            'is_read' => true,
+        ]);
+    }
+
+    public function test_user_cannot_mark_other_users_notification_as_read(): void
+    {
+        $notification = AppNotification::create([
+            'user_id' => $this->teacher->id,
+            'type' => 'assignment',
+            'title' => 'Tugas baru',
+            'message' => 'Ada tugas baru.',
+            'is_read' => false,
+        ]);
+
+        $this->actingAs($this->student)->post(
+            route('notifications.mark-as-read', $notification->id)
+        )->assertForbidden();
+
+        $this->assertDatabaseHas('app_notifications', [
+            'id' => $notification->id,
+            'is_read' => false,
         ]);
     }
 

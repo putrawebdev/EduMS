@@ -24,6 +24,7 @@ class AppNotification extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'integer',
         'data' => 'array',
         'is_read' => 'boolean',
         'read_at' => 'datetime',

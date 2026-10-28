@@ -40,7 +40,7 @@ class NotificationController extends Controller
 
     public function markAsRead(Request $request, AppNotification $notification): RedirectResponse
     {
-        if ($notification->user_id !== $request->user()->id) {
+        if ((int) $notification->user_id !== (int) $request->user()->id) {
             abort(403);
         }
 
