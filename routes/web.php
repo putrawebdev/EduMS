@@ -93,5 +93,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/mata-pelajaran/{subject}', [AdminSubjectController::class, 'destroy'])->name('subjects.destroy');
     });
 });
-//auth routes
+//auth routes ppp
 require __DIR__.'/auth.php';
